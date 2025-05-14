@@ -1,10 +1,13 @@
 package com.EcoMarketMS.MS_INVENTARIO.model;
 
+import org.hibernate.annotations.ManyToAny;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,8 +24,9 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cod_Producto;
 
-    @Column(length = 50,  nullable = false)
-    private String categoria; //es solo de prueba. Debe ser clase Categoria, no String
+    @ManyToOne 
+    @JoinColumn(name = "idCategoria", nullable = false) 
+    private Categoria categoria; //es solo de prueba. Debe ser clase Categoria, no String
 
     @Column(length = 50,  nullable = false)
     private String nomProducto;
