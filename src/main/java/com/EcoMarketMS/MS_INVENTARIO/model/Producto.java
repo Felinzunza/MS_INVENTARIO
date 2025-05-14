@@ -2,6 +2,8 @@ package com.EcoMarketMS.MS_INVENTARIO.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class Producto {
     private int cod_Producto;
 
     @ManyToOne 
+    @JsonIgnore
     @JoinColumn(name = "idCategoria", nullable = false) 
     private Categoria categoria; 
 
