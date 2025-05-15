@@ -10,7 +10,7 @@ import com.EcoMarketMS.MS_INVENTARIO.model.Producto;
 import com.EcoMarketMS.MS_INVENTARIO.service.ProductoService;
 
 @RestController
-@RequestMapping("/productos")
+@RequestMapping("/api/productos")
 public class ProductoControlador {
 
     

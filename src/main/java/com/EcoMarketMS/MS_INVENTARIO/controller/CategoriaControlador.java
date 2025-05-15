@@ -17,7 +17,7 @@ import com.EcoMarketMS.MS_INVENTARIO.model.Categoria;
 import com.EcoMarketMS.MS_INVENTARIO.service.CategoriaService;
 
 @RestController
-@RequestMapping("/categorias")
+@RequestMapping("/api/categorias")
 public class CategoriaControlador {
     @Autowired
     private CategoriaService categoriaService;
@@ -29,6 +29,16 @@ public class CategoriaControlador {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(categorias, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Categoria> getCategoriaById(@PathVariable int id) {
+        Categoria categoria = categoriaService.findById(id);
+        if (categoria == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(categoria, HttpStatus.OK);
+     
     }
 
 
