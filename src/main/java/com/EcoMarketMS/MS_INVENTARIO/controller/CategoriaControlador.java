@@ -50,11 +50,5 @@ public class CategoriaControlador {
         categoriaService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-
-
-
-    
     
 }
