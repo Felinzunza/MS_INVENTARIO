@@ -2,7 +2,7 @@ package com.EcoMarketMS.MS_INVENTARIO.model;
 
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +28,7 @@ public class Producto {
     private int cod_Producto;
 
     @ManyToOne 
-    @JsonBackReference
+    @JsonIgnoreProperties
     @JoinColumn(name = "idCategoria", nullable = false) 
     private Categoria categoria; 
 
