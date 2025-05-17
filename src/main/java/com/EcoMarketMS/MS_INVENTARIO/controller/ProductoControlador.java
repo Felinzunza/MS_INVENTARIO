@@ -58,4 +58,35 @@ public class ProductoControlador {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+        // ✅ Método para ajustar stock
+    @PatchMapping("/{id}/ajustar-stock")
+    public ResponseEntity<Producto> ajustarStock(
+        @PathVariable int id,
+        @RequestParam String tipo,
+        @RequestParam int cantidad) {
+
+        Producto producto = productoService.findbyid(id);
+        if (producto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (cantidad <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if (tipo.equalsIgnoreCase("INGRESO")) {
+            producto.setStock(producto.getStock() + cantidad);
+        } else if (tipo.equalsIgnoreCase("SALIDA")) {
+            if (producto.getStock() < cantidad) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }    
+            // Verificar si hay suficiente stock para la salida         
+            producto.setStock(producto.getStock() - cantidad);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        productoService.save(producto);
+        return new ResponseEntity<>(producto, HttpStatus.OK);
+    }
 }
