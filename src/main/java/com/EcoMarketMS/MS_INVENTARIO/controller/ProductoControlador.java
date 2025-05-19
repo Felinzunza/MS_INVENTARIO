@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.EcoMarketMS.MS_INVENTARIO.model.Producto;
+import com.EcoMarketMS.MS_INVENTARIO.service.CategoriaService;
 import com.EcoMarketMS.MS_INVENTARIO.service.ProductoService;
 
 @RestController
@@ -17,6 +18,9 @@ public class ProductoControlador {
 
     @Autowired
     private ProductoService productoService;
+
+    @Autowired
+    private CategoriaService categoriaService;
 
     // @GetMapping("/productos")
 
@@ -33,7 +37,13 @@ public class ProductoControlador {
     public ResponseEntity<Producto>postProducto(@RequestBody Producto producto){ //CAMBIE REQUESTBODY POR REQUESTPARAM
         Producto buscado = productoService.findbyid(producto.getCod_Producto());
         if( buscado == null){
-             return new ResponseEntity<>(productoService.save(producto), HttpStatus.CREATED);
+        if (producto.getCategoria() != null){ 
+            producto.setCategoria(
+                categoriaService.findById(producto.getCategoria().getIdCategoria())
+            );
+        }
+        return new ResponseEntity<>(productoService.save(producto), HttpStatus.CREATED);
+             
         }
         return new  ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -59,7 +69,7 @@ public class ProductoControlador {
     }
 
         // ✅ Método para ajustar stock
-    @PatchMapping("/{id}/ajustar-stock")
+    @PatchMapping("/{id}/ajustar-stock") //http://localhost:8080/api/productos/1/ajustar-stock?tipo=INGRESO&cantidad=10
     public ResponseEntity<Producto> ajustarStock(
         @PathVariable int id,
         @RequestParam String tipo,
@@ -88,5 +98,15 @@ public class ProductoControlador {
 
         productoService.save(producto);
         return new ResponseEntity<>(producto, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> updateProducto(@PathVariable int id, @RequestBody Producto producto) {
+        Producto productoExistente = productoService.findbyid(id);
+        if (productoExistente == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        producto.setCod_Producto(id); // Asegúrate de que el ID se mantenga igual
+        return new ResponseEntity<>(productoService.save(producto), HttpStatus.OK);
     }
 }
