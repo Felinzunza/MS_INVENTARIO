@@ -26,8 +26,8 @@ public class Tienda {
     @Column(length = 50, nullable = false)
     private String direccionTienda;
 
-    @Column(nullable = false)
-    private int telefonoTienda;
+    @Column(length = 15, nullable = false)
+    private String telefonoTienda;
 
     @Column(length = 50, nullable = true)
     private String correoTienda;

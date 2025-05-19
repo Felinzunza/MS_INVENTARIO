@@ -28,6 +28,7 @@ public class TiendaService {
     public void eliminarTienda(int idTienda) {
         tiendaRepository.deleteById(idTienda);
     }
+    
 
     
 }
