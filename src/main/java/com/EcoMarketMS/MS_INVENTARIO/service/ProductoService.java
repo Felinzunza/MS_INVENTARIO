@@ -30,5 +30,9 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 
+    public boolean existeProducto(int id){
+        return productoRepository.existsById(id);
+    }
+
   
 }

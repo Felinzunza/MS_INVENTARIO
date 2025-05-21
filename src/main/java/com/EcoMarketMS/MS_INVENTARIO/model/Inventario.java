@@ -1,7 +1,5 @@
 package com.EcoMarketMS.MS_INVENTARIO.model;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -12,32 +10,31 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
-@AllArgsConstructor
+@Table(name = "inventario", uniqueConstraints = @UniqueConstraint(columnNames = {"idTienda", "cod_Producto"}))
 @NoArgsConstructor
-@Table(name = "producto")
-public class Producto {
-
+@AllArgsConstructor
+@Data
+public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int cod_Producto;
+    private int idInventario;
+    
+    @ManyToOne 
+    @JsonIgnoreProperties
+    @JoinColumn(name = "idTienda", nullable = false) 
+    private Tienda tienda; 
 
     @ManyToOne 
     @JsonIgnoreProperties
-    @JoinColumn(name = "idCategoria", nullable = false) 
-    private Categoria categoria; 
+    @JoinColumn(name = "cod_Producto", nullable = false) 
+    private Producto producto; 
 
-    @Column(length = 50,  nullable = false)
-    private String nomProducto;
-    
     @Column(nullable = false)
-    private int precio;
-
-
-
+    private int stock;
 }

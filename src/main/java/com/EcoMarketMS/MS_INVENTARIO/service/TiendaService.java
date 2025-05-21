@@ -28,6 +28,10 @@ public class TiendaService {
     public void eliminarTienda(int idTienda) {
         tiendaRepository.deleteById(idTienda);
     }
+
+    public boolean existeTienda(int idTienda) {
+        return tiendaRepository.existsById(idTienda);
+    }
     
 
     

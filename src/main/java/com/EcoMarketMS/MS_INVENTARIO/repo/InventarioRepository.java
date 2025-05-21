@@ -1,0 +1,16 @@
+package com.EcoMarketMS.MS_INVENTARIO.repo;
+
+import java.util.List;
+import com.EcoMarketMS.MS_INVENTARIO.model.Inventario;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface InventarioRepository extends JpaRepository<Inventario, Integer> {
+    // Aquí puedes agregar métodos personalizados si es necesario
+    // Por ejemplo, para buscar inventarios por tienda o producto
+    List<Inventario>findAllByOrderByTiendaIdTiendaAsc(); //
+    List<Inventario> findByTiendaIdTienda(int idTienda);
+    Inventario findById(int id);   
+}
