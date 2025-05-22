@@ -67,21 +67,21 @@ public class InventarioControlador {
 
     // Guardar nuevo registro
     @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Inventario inventario) { //el signo ? significa que no se sabe que tipo de objeto es
+    public ResponseEntity<Inventario> guardar(@RequestBody Inventario inventario) { //el signo ? significa que no se sabe que tipo de objeto es
         
     int idProd = inventario.getProducto().getCodProducto();
     int idTienda = inventario.getTienda().getIdTienda();
 
     if (!productoService.existeProducto(idProd) || !tiendaService.existeTienda(idTienda)) {
-        return new ResponseEntity<>("Producto o tienda no existen", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    Producto producto = productoService.findbyid(inventario.getProducto().getCodProducto());
+    Producto producto = productoService.findbyid(idProd);
     inventario.setProducto(producto);
-    Tienda tienda = tiendaService.buscarTiendaxId(inventario.getTienda().getIdTienda());
+    Tienda tienda = tiendaService.buscarTiendaxId(idTienda);
     inventario.setTienda(tienda);
 
     if (inventario.getStock() < 0) {
-        return new ResponseEntity<>("El stock no puede ser negativo", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     return new ResponseEntity<>(inventarioService.guardar(inventario), HttpStatus.CREATED);

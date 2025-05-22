@@ -48,6 +48,12 @@ public class ProductoControlador {
         return new  ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    /*    Ejemplo desde postman        {   "categoria": {"idCategoria": 2},
+                                        "nomProducto": "Compostera de madera",
+                                        "precio": 30000
+                                        } 
+    */
+
    
     @GetMapping("/{id}")
     public ResponseEntity<Producto> getProductoById(@PathVariable int id) {
