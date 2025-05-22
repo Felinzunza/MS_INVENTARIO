@@ -7,6 +7,8 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.EcoMarketMS.MS_INVENTARIO.model.Inventario;
+import com.EcoMarketMS.MS_INVENTARIO.model.Producto;
+import com.EcoMarketMS.MS_INVENTARIO.model.Tienda;
 import com.EcoMarketMS.MS_INVENTARIO.service.InventarioService;
 import com.EcoMarketMS.MS_INVENTARIO.service.ProductoService;
 import com.EcoMarketMS.MS_INVENTARIO.service.TiendaService;
@@ -73,6 +75,10 @@ public class InventarioControlador {
     if (!productoService.existeProducto(idProd) || !tiendaService.existeTienda(idTienda)) {
         return new ResponseEntity<>("Producto o tienda no existen", HttpStatus.BAD_REQUEST);
     }
+    Producto producto = productoService.findbyid(inventario.getProducto().getCod_Producto());
+    inventario.setProducto(producto);
+    Tienda tienda = tiendaService.buscarTiendaxId(inventario.getTienda().getIdTienda());
+    inventario.setTienda(tienda);
 
     if (inventario.getStock() < 0) {
         return new ResponseEntity<>("El stock no puede ser negativo", HttpStatus.BAD_REQUEST);
