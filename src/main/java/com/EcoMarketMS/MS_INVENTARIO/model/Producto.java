@@ -25,7 +25,7 @@ public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int cod_Producto;
+    private int codProducto;
 
     @ManyToOne 
     @JsonIgnoreProperties

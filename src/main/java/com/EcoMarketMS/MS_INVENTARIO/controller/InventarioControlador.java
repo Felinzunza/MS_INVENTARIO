@@ -47,14 +47,14 @@ public class InventarioControlador {
     }
 
     // Obtener registros por código de producto (No considerado en el momento)
-   /*  @GetMapping("/producto/{codProducto}")
+   @GetMapping("/producto/{codProducto}")
     public ResponseEntity<List<Inventario>> getPorProducto(@PathVariable int codProducto) {
         List<Inventario> lista = inventarioService.obtenerPorProducto(codProducto);
         if (lista.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(lista, HttpStatus.OK);
-    }*/
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Inventario> getPorId(@PathVariable int id) {
@@ -69,13 +69,13 @@ public class InventarioControlador {
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody Inventario inventario) { //el signo ? significa que no se sabe que tipo de objeto es
         
-    int idProd = inventario.getProducto().getCod_Producto();
+    int idProd = inventario.getProducto().getCodProducto();
     int idTienda = inventario.getTienda().getIdTienda();
 
     if (!productoService.existeProducto(idProd) || !tiendaService.existeTienda(idTienda)) {
         return new ResponseEntity<>("Producto o tienda no existen", HttpStatus.BAD_REQUEST);
     }
-    Producto producto = productoService.findbyid(inventario.getProducto().getCod_Producto());
+    Producto producto = productoService.findbyid(inventario.getProducto().getCodProducto());
     inventario.setProducto(producto);
     Tienda tienda = tiendaService.buscarTiendaxId(inventario.getTienda().getIdTienda());
     inventario.setTienda(tienda);
@@ -100,7 +100,7 @@ public class InventarioControlador {
     }
 
     // Ajustar stock por ID de inventario
-    @PatchMapping("/{id}/ajustar-stock") //http://localhost:8081/api/inventario/1/ajustar-stock?tipo=+&cantidad=10
+    @PatchMapping("/{id}/ajustar-stock") //http://localhost:8081/api/inventario/1/ajustar-stock?tipo=INGRESO&cantidad=10
     public ResponseEntity<Inventario> ajustarStock(
             @PathVariable int id,
             @RequestParam String tipo,

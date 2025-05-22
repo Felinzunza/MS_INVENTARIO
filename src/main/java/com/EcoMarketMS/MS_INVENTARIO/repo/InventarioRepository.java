@@ -12,5 +12,6 @@ public interface InventarioRepository extends JpaRepository<Inventario, Integer>
     // Por ejemplo, para buscar inventarios por tienda o producto
     List<Inventario>findAllByOrderByTiendaIdTiendaAsc(); //
     List<Inventario> findByTiendaIdTienda(int idTienda);
+    List<Inventario> findByProductoCodProducto(int codProducto); 
     Inventario findById(int id);   
 }

@@ -119,7 +119,7 @@ public List<ReporteInventario> generarReporteTodasLasTiendas(int cantidad, boole
             .limit(cantidad)
             .map(inv -> {
                 Map<String, Object> productoMap = new LinkedHashMap<>();
-                productoMap.put("idProducto", inv.getProducto().getCod_Producto());
+                productoMap.put("idProducto", inv.getProducto().getCodProducto());
                 productoMap.put("nomProducto", inv.getProducto().getNomProducto());
                 productoMap.put("precio", inv.getProducto().getPrecio());
                 productoMap.put("cantidad", inv.getStock());
@@ -162,7 +162,7 @@ public ReporteInventario generarReportePorTienda(int idTienda, int cantidad, boo
         .limit(cantidad)
         .map(inv -> {
             Map<String, Object> productoMap = new LinkedHashMap<>();
-            productoMap.put("idProducto", inv.getProducto().getCod_Producto());
+            productoMap.put("idProducto", inv.getProducto().getCodProducto());
             productoMap.put("nomProducto", inv.getProducto().getNomProducto());
             productoMap.put("precio", inv.getProducto().getPrecio());
             productoMap.put("cantidad", inv.getStock()); // ← stock real

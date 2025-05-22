@@ -34,8 +34,8 @@ public class ProductoControlador {
     }
 
     @PostMapping
-    public ResponseEntity<Producto>postProducto(@RequestBody Producto producto){ //CAMBIE REQUESTBODY POR REQUESTPARAM
-        Producto buscado = productoService.findbyid(producto.getCod_Producto());
+    public ResponseEntity<Producto> postProducto(@RequestBody Producto producto) { //CAMBIE REQUESTBODY POR REQUESTPARAM
+        Producto buscado = productoService.findbyid(producto.getCodProducto());
         if( buscado == null){
         if (producto.getCategoria() != null){ 
             producto.setCategoria(
@@ -76,7 +76,7 @@ public class ProductoControlador {
         if (productoExistente == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        producto.setCod_Producto(id); // Asegúrate de que el ID se mantenga igual
+        producto.setCodProducto(id); // Asegúrate de que el ID se mantenga igual
         return new ResponseEntity<>(productoService.save(producto), HttpStatus.OK);
     }
 }

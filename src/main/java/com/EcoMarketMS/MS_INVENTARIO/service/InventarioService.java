@@ -15,10 +15,7 @@ public class InventarioService {
     @Autowired
     private InventarioRepository inventarioRepository;
 
-   /*public List<Inventario>obtenerProductosPorTienda(int idTienda) {
-        return inventarioRepository.findAllByOrderByTiendaIdTiendaAsc();
-
-    }*/
+    
     public Inventario guardar (Inventario inventario) {
         return inventarioRepository.save(inventario);
     }
@@ -29,9 +26,10 @@ public class InventarioService {
     public List<Inventario> obtenerPorTienda(int idTienda) {
         return inventarioRepository.findByTiendaIdTienda(idTienda);
     }
-    /*public List<Inventario> obtenerPorProducto(int cod_Producto) { (De momento no se considera)
-        return inventarioRepository.findByProductoCod_Producto(cod_Producto);
-    }*/
+    public List<Inventario> obtenerPorProducto(int codProducto) { 
+        return inventarioRepository.findByProductoCodProducto(codProducto);
+    }
+
     public Inventario obtenerPorId(int id) {
         return inventarioRepository.findById(id);
     }
