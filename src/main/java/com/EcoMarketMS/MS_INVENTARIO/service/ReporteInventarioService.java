@@ -1,10 +1,7 @@
 package com.EcoMarketMS.MS_INVENTARIO.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,41 +22,56 @@ public class ReporteInventarioService {
     private TiendaRepository tiendaRepository;
 
  
-public List<ReporteInventario> generarReporteTodasLasTiendas(int cantidad, boolean ascendente) {
+    public List<ReporteInventario> generarReporteTodasLasTiendas(int cantidad, boolean ascendente) {
+    // Obtener todas las tiendas
     List<Tienda> tiendas = tiendaRepository.findAll();
+
+    // Lista final de reportes
     List<ReporteInventario> reportes = new ArrayList<>();
 
+    // Recorrer cada tienda
     for (Tienda tienda : tiendas) {
+        // Obtener inventario por tienda
         List<Inventario> inventarios = inventarioRepository.findByTiendaIdTienda(tienda.getIdTienda());
+
+        // Si no hay inventario, saltar esta tienda
         if (inventarios.isEmpty()) continue;
 
-        Comparator<Inventario> comparator = Comparator.comparingInt(Inventario::getStock);
-        if (!ascendente) comparator = comparator.reversed();
+        // Ordenar inventarios por stock
+        inventarios.sort((a, b) -> {
+            if (ascendente) return Integer.compare(a.getStock(), b.getStock());
+            else return Integer.compare(b.getStock(), a.getStock());
+        });
 
-        List<Map<String, Object>> productosFiltrados = inventarios.stream()
-            .sorted(comparator)
-            .limit(cantidad)
-            .map(inv -> {
-                Map<String, Object> productoMap = new LinkedHashMap<>();
-                productoMap.put("idProducto", inv.getProducto().getCodProducto());
-                productoMap.put("nomProducto", inv.getProducto().getNomProducto());
-                productoMap.put("precio", inv.getProducto().getPrecio());
-                productoMap.put("cantidad", inv.getStock());
-                return productoMap;
-            })
-            .toList();
+        // Filtrar los primeros N productos
+        List<Inventario> productosFiltrados = new ArrayList<>();
+        int limite = Math.min(cantidad, inventarios.size());
 
-        double valorTotal = inventarios.stream()
-            .mapToDouble(inv -> inv.getProducto().getPrecio() * inv.getStock())
-            .sum();
+        for (int i = 0; i < limite; i++) {
+            productosFiltrados.add(inventarios.get(i));
+        }
 
-        double valorPromedio = valorTotal / inventarios.size();
+        //Total y promedio
+        double valorTotal = 0;
+        int totalUnidades = 0;
 
+        for (Inventario inv : inventarios) {
+            double precio = inv.getProducto().getPrecio();
+            int stock = inv.getStock();
+
+            valorTotal += precio * stock;
+            totalUnidades += stock;
+        }
+
+         double valorPromedioUnidad = (totalUnidades == 0) ? 0 : valorTotal / totalUnidades;
+
+
+        // Crear el reporte y agregarlo a la lista
         ReporteInventario reporte = new ReporteInventario(
-            tienda,
-            productosFiltrados,
+            
+            productosFiltrados,  // ← lista de Inventario directamente
             valorTotal,
-            valorPromedio
+            valorPromedioUnidad
         );
 
         reportes.add(reporte);
@@ -67,6 +79,9 @@ public List<ReporteInventario> generarReporteTodasLasTiendas(int cantidad, boole
 
     return reportes;
 }
+
+
+
 
 /********************************************* */
 public ReporteInventario generarReportePorTienda(int idTienda, int cantidad, boolean ascendente) {
@@ -76,35 +91,42 @@ public ReporteInventario generarReportePorTienda(int idTienda, int cantidad, boo
     List<Inventario> inventarios = inventarioRepository.findByTiendaIdTienda(idTienda);
     if (inventarios.isEmpty()) return null;
 
-    Comparator<Inventario> comparator = Comparator.comparingInt(Inventario::getStock);
-    if (!ascendente) comparator = comparator.reversed();
+    // Ordenar por stock
+    inventarios.sort((a, b) -> {
+        if (ascendente) return Integer.compare(a.getStock(), b.getStock());
+        else return Integer.compare(b.getStock(), a.getStock());
+    });
 
-    List<Map<String, Object>> productosFiltrados = inventarios.stream()
-        .sorted(comparator)
-        .limit(cantidad)
-        .map(inv -> {
-            Map<String, Object> productoMap = new LinkedHashMap<>();
-            productoMap.put("idProducto", inv.getProducto().getCodProducto());
-            productoMap.put("nomProducto", inv.getProducto().getNomProducto());
-            productoMap.put("precio", inv.getProducto().getPrecio());
-            productoMap.put("cantidad", inv.getStock()); // ← stock real
-            return productoMap;
-        })
-        .toList();
+    // Filtrar los top N inventarios
+    List<Inventario> productosFiltrados = new ArrayList<>();
+    int limite = Math.min(cantidad, inventarios.size());
 
-    double valorTotal = inventarios.stream()
-        .mapToDouble(inv -> inv.getProducto().getPrecio() * inv.getStock())
-        .sum();
+    for (int i = 0; i < limite; i++) {
+        productosFiltrados.add(inventarios.get(i));
+    }
 
-    double valorPromedio = valorTotal / inventarios.size();
+    //Total y promedio
+    double valorTotal = 0;
+    int totalUnidades = 0;
+
+    for (Inventario inv : inventarios) {
+        double precio = inv.getProducto().getPrecio();
+        int stock = inv.getStock();
+
+        valorTotal += precio * stock;
+        totalUnidades += stock;
+        }
+
+        double valorPromedioUnidad = (totalUnidades == 0) ? 0 : valorTotal / totalUnidades;
 
     return new ReporteInventario(
-        tienda,
-        productosFiltrados,
+        
+        productosFiltrados,  
         valorTotal,
-        valorPromedio
+        valorPromedioUnidad
     );
 }
+
 
 
 
