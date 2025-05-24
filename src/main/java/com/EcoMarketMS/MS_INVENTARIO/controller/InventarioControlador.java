@@ -67,7 +67,7 @@ public class InventarioControlador {
 
     // Guardar nuevo registro
     @PostMapping
-    public ResponseEntity<Inventario> guardar(@RequestBody Inventario inventario) { //el signo ? significa que no se sabe que tipo de objeto es
+    public ResponseEntity<Inventario> guardar(@RequestBody Inventario inventario) {
         
     int idProd = inventario.getProducto().getCodProducto();
     int idTienda = inventario.getTienda().getIdTienda();

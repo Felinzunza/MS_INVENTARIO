@@ -20,8 +20,8 @@ public class InventarioService {
         return inventarioRepository.save(inventario);
     }
     public List<Inventario> obtenerTodos() {
-        return inventarioRepository.findAllByOrderByTiendaIdTiendaAsc();
-    } //esto es mas directo y no se necesita el idTienda
+        return inventarioRepository.findAll();
+    } 
 
     public List<Inventario> obtenerPorTienda(int idTienda) {
         return inventarioRepository.findByTiendaIdTienda(idTienda);

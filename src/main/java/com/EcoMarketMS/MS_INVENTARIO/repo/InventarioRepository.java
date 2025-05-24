@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InventarioRepository extends JpaRepository<Inventario, Integer> {
-    // Aquí puedes agregar métodos personalizados si es necesario
-    // Por ejemplo, para buscar inventarios por tienda o producto
-    List<Inventario>findAllByOrderByTiendaIdTiendaAsc(); //
+    
     List<Inventario> findByTiendaIdTienda(int idTienda);
     List<Inventario> findByProductoCodProducto(int codProducto); 
     Inventario findById(int id);   
