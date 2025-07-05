@@ -37,8 +37,9 @@ public class InventarioService {
         inventarioRepository.deleteById(id);
     }
 
-   public Inventario ajustarStock(int id, TipoMov tipo, int cantidad) {
-    Inventario inv = obtenerPorId(id);
+   public Inventario ajustarStockPorTiendaYProducto(int idTienda, int codProducto, TipoMov tipo, int cantidad) {
+    Inventario inv = inventarioRepository.findByTiendaIdTiendaAndProductoCodProducto(idTienda, codProducto);
+
     if (inv == null || cantidad <= 0) {
         return null;
     }
@@ -56,6 +57,26 @@ public class InventarioService {
 
     return guardar(inv);
 }
+    public Inventario ajustarStockXId(int id, TipoMov tipo, int cantidad) {
+        Inventario inv = obtenerPorId(id);
+        if (inv == null || cantidad <= 0) {
+            return null;
+        }
+
+        switch (tipo) {
+            case INGRESO -> inv.setStock(inv.getStock() + cantidad);
+            case SALIDA -> {
+                if (inv.getStock() < cantidad) {
+                    return null;
+                }
+                inv.setStock(inv.getStock() - cantidad);
+            }
+            case AJUSTE -> inv.setStock(cantidad); //  override total
+        }
+
+        return guardar(inv);
+    }
+
 }
 
 

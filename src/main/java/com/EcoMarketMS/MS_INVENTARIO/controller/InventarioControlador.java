@@ -100,6 +100,23 @@ public class InventarioControlador {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // Ajustar stock por ID de tienda y código de producto, http://localhost:8081/api/inventario/ajustar-stock?idTienda=1&codProducto=1&tipo=INGRESO&cantidad=10
+    @PatchMapping("/ajustar-stock")
+    public ResponseEntity<Inventario> ajustarStockXIdTIendaYCodProducto(
+            @RequestParam int idTienda,
+            @RequestParam int codProducto,
+            @RequestParam TipoMov tipo,
+            @RequestParam int cantidad) {
+
+        Inventario actualizado = inventarioService.ajustarStockPorTiendaYProducto(idTienda, codProducto, tipo, cantidad);
+
+        if (actualizado == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(actualizado, HttpStatus.OK);
+    }
+
     // Ajustar stock por ID de inventario, http://localhost:8081/api/inventario/1/ajustar-stock?tipo=AJUSTE&cantidad=10
     @PatchMapping("/{id}/ajustar-stock")
     public ResponseEntity<Inventario> ajustarStockXIdInventario(
@@ -107,7 +124,7 @@ public class InventarioControlador {
             @RequestParam TipoMov tipo,
             @RequestParam int cantidad) {
 
-        Inventario actualizado = inventarioService.ajustarStock(id, tipo, cantidad);
+        Inventario actualizado = inventarioService.ajustarStockXId(id, tipo, cantidad);
 
         if (actualizado == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
