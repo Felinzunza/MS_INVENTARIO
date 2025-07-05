@@ -11,5 +11,6 @@ public interface InventarioRepository extends JpaRepository<Inventario, Integer>
     
     List<Inventario> findByTiendaIdTienda(int idTienda);
     List<Inventario> findByProductoCodProducto(int codProducto); 
+    List<Inventario> findByTiendaIdTiendaAndProductoCodProducto(int idTienda, int codProducto);
     Inventario findById(int id);   
 }

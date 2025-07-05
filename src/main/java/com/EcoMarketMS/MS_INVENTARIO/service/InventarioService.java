@@ -1,12 +1,12 @@
 package com.EcoMarketMS.MS_INVENTARIO.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.EcoMarketMS.MS_INVENTARIO.model.Inventario;
+import com.EcoMarketMS.MS_INVENTARIO.model.TipoMov;
 import com.EcoMarketMS.MS_INVENTARIO.repo.InventarioRepository;
 
 
@@ -37,31 +37,26 @@ public class InventarioService {
         inventarioRepository.deleteById(id);
     }
 
-    public List<Inventario> obtenerInventarioConCamposNulos() {
-    List<Inventario> todos = inventarioRepository.findAll();
+   public Inventario ajustarStock(int id, TipoMov tipo, int cantidad) {
+    Inventario inv = obtenerPorId(id);
+    if (inv == null || cantidad <= 0) {
+        return null;
+    }
 
-    List<Inventario> incompletos = new ArrayList<>();
-    for (Inventario i : todos) {
-        if (i.getProducto() == null || i.getTienda() == null) {
-            incompletos.add(i);
+    switch (tipo) {
+        case INGRESO -> inv.setStock(inv.getStock() + cantidad);
+        case SALIDA -> {
+            if (inv.getStock() < cantidad) {
+                return null;
+            }
+            inv.setStock(inv.getStock() - cantidad);
         }
+        case AJUSTE -> inv.setStock(cantidad); //  override total
     }
 
-    return incompletos;
-    }
-
-
-    public List<Inventario> limpiarInventarioConCamposNulos() {
-    List<Inventario> todos = inventarioRepository.findAll();
-
-    List<Inventario> eliminados = new ArrayList<>();
-    for (Inventario i : todos) {
-        if (i.getProducto() == null || i.getTienda() == null) {
-            eliminados.add(i);
-            inventarioRepository.deleteById(i.getIdInventario());
-        }
-    }
-
-    return eliminados;
-    }
+    return guardar(inv);
 }
+}
+
+
+   
